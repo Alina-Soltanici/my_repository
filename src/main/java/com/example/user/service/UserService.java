@@ -7,9 +7,7 @@ import com.example.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /*
@@ -33,10 +31,12 @@ public class UserService {
         return userRepository.save (user);
     }
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) throws UserNotFoundException {
+        if (!userRepository.existsById (id)) {
+            throw new UserNotFoundException ("User with id " + id + "doesnt exist");
+        }
         userRepository.deleteById (id);
     }
-
     public User updateUser(Long id, UserDto userDto) throws UserNotFoundException {
         User user = userRepository.findById (id)
                 .orElseThrow (() -> new UserNotFoundException ("User with given id: " + id + " doesnt exist."));
