@@ -46,7 +46,7 @@ public class UserService {
     }
 
     public UserDto getUser(Long id) throws UserNotFoundException {
-        User user = userRepository.findById (id)
+        User user = userRepository.findById(id)
                 .orElseThrow (() -> new UserNotFoundException ("User with given id: " + id + " doesn't exist." ));
         return new UserDto (user);
     }
@@ -60,7 +60,7 @@ public class UserService {
     public List<UserDto> getAllUsers(){
         List<User> users = userRepository.findAll();
         return users.stream ()
-                .map (user -> new UserDto ((User) users))
+                .map (user -> new UserDto (user.getUsername(), user.getPassword ()))
                 .collect (Collectors.toList ());
     }
 }

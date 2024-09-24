@@ -34,15 +34,16 @@ public class UserController {
         return ResponseEntity.ok("User with id " + id + " has been deleted");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id){
-        return ResponseEntity.ok(new UserDto());
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) throws UserNotFoundException {
         return new ResponseEntity<>(userService.updateUser(id, userDto), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable("id") Long id) throws UserNotFoundException {
+        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
+    }
+
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers(){
