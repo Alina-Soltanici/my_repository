@@ -8,8 +8,20 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: pass12
+          POSTGRES_DB: lib_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 10s
+          --health-timeout 5s --health-retries 5
 
     steps:
       - uses: actions/checkout@v4
@@ -22,5 +34,8 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - name: Run tests
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/lib_db
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: pass12
         run: mvn test -e -X
-
